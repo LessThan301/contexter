@@ -1,16 +1,18 @@
-// Kill switch for the service worker that Contexter (now Synoikon) installed at /contexter/.
-// Browsers re-check /contexter/sw.js on their own; this version clears Contexter's caches,
-// unregisters itself and moves any open windows to the same page under /synoikon/.
+// Kill switch for the service worker that Contexter (now Synoikon, https://synoikon.com) installed at
+// lessthan301.github.io/contexter/. Browsers re-check /contexter/sw.js on their own; this version deletes the
+// old app's caches on this origin, moves open /contexter/ windows to the same page on synoikon.com and
+// unregisters itself.
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
-    for (const key of await caches.keys()) if (key.startsWith('contexter-')) await caches.delete(key);
+    // contexter-*: the original app; synoikon-*: the app while it lived at lessthan301.github.io/synoikon/
+    for (const key of await caches.keys()) if (/^(contexter|synoikon)-/.test(key)) await caches.delete(key);
     await self.clients.claim(); // take over open /contexter/ windows so they can be navigated
     for (const client of await self.clients.matchAll({ type: 'window', includeUncontrolled: true })) {
       const url = new URL(client.url);
-      if (!/^\/contexter(\/|$)/i.test(url.pathname)) continue; // leave /synoikon/ and other tabs alone
-      url.pathname = url.pathname.replace(/^\/contexter(\/|$)/i, '/synoikon/');
-      await client.navigate(url.href).catch(() => {});
+      if (!/^\/contexter(\/|$)/i.test(url.pathname)) continue; // leave other tabs alone
+      const rest = url.pathname.replace(/^\/contexter/i, '') || '/';
+      await client.navigate('https://synoikon.com' + rest + url.search + url.hash).catch(() => {});
     }
     await self.registration.unregister();
   })());
