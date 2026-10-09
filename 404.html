@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Contexter is now Synoikon</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://lessthan301.github.io/synoikon/">
+  <script>
+    // Contexter was renamed to Synoikon: send /contexter/<anything>?<query>#<hash> to /synoikon/<anything>?<query>#<hash>
+    (function () {
+      var m = location.pathname.match(/^\/contexter(\/.*)?$/i);
+      var rest = (m && m[1]) || '/';
+      location.replace('/synoikon' + rest + location.search + location.hash);
+    })();
+  </script>
+  <noscript><meta http-equiv="refresh" content="0; url=https://lessthan301.github.io/synoikon/"></noscript>
+  <style>body{font:16px/1.5 system-ui,sans-serif;background:#0f1220;color:#e9ecf7;display:grid;place-items:center;min-height:100vh;margin:0}a{color:#5b8def}</style>
+</head>
+<body>
+  <p>Contexter is now <a href="https://lessthan301.github.io/synoikon/">Synoikon</a>. Redirecting…</p>
+</body>
+</html>
