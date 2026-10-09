@@ -8,6 +8,7 @@ self.addEventListener('activate', (event) => {
     await self.clients.claim(); // take over open /contexter/ windows so they can be navigated
     for (const client of await self.clients.matchAll({ type: 'window', includeUncontrolled: true })) {
       const url = new URL(client.url);
+      if (!/^\/contexter(\/|$)/i.test(url.pathname)) continue; // leave /synoikon/ and other tabs alone
       url.pathname = url.pathname.replace(/^\/contexter(\/|$)/i, '/synoikon/');
       await client.navigate(url.href).catch(() => {});
     }
