@@ -6,7 +6,8 @@ self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     // contexter-*: the original app; synoikon-*: the app while it lived at lessthan301.github.io/synoikon/
-    for (const key of await caches.keys()) if (/^(contexter|synoikon)-/.test(key)) await caches.delete(key);
+    // (synoikon-preview-*: the live preview at lessthan301.github.io/synoikon-preview/, kept)
+    for (const key of await caches.keys()) if (/^contexter-|^synoikon-(?!preview-)/.test(key)) await caches.delete(key);
     await self.clients.claim(); // take over open /contexter/ windows so they can be navigated
     for (const client of await self.clients.matchAll({ type: 'window', includeUncontrolled: true })) {
       const url = new URL(client.url);
